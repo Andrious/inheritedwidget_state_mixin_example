@@ -43,7 +43,7 @@ mixin InheritedWidgetStateMixin<T extends StatefulWidget> on State<T> {
   /// Unless, of course, the developer has explicitly overridden the function
   @override
   Widget build(BuildContext context) {
-    _overrideBuild = false;
+    _noBuildIn = false;
     return _InheritedWidget(
       key: _key,
       state: this,
@@ -51,12 +51,12 @@ mixin InheritedWidgetStateMixin<T extends StatefulWidget> on State<T> {
     );
   }
 
-  // Only build once
+  // Only create once
   Widget? _child;
 
   /// Indicate the developer has instead overridden the build() function
-  bool get overrideBuild => _overrideBuild;
-  bool _overrideBuild = true;
+  bool get noBuildIn => _noBuildIn;
+  bool _noBuildIn = true;
 
   /// The InheritedWidget's element object assigning Widget dependencies
   InheritedElement? _inheritedElement;
@@ -69,7 +69,7 @@ mixin InheritedWidgetStateMixin<T extends StatefulWidget> on State<T> {
   ///
   ///  Return false if not configured to use the InheritedWidget
   bool dependOnInheritedWidget(BuildContext? context) {
-    final depend = context != null && !_overrideBuild;
+    final depend = context != null && !_noBuildIn;
     if (depend) {
       if (_inheritedElement == null) {
         _dependencies.add(context);
