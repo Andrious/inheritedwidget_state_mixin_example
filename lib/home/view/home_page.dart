@@ -34,7 +34,7 @@ class _MyHomePageState extends State<MyHomePage>
 
   late WordPairs wordPairsWidget;
 
-  /// In case this State object is unmounted from the widget tree.
+  /// Ensure to also 'deactivate' the word pairs package
   @override
   void deactivate() {
     wordPairsWidget.deactivate();
