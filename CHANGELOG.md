@@ -1,4 +1,8 @@
 
+## 1.2.0
+February 28, 2024
+- Demonstrate the use of findAncestorStateOfType
+
 ## 1.1.0+3
 February 28, 2024
 - Rearranged code

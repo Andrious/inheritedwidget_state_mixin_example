@@ -5,32 +5,32 @@ import '/src/view.dart';
 
 import 'package:english_words/english_words.dart';
 
+///
 class WordPairs extends StatelessWidget {
   /// Only one instance of the class is necessary and desired.
   WordPairs({
     super.key,
     int? seconds,
-    required this.state,
+    required InheritedWidgetStateMixin state,
   }) : _timer = _WordPairsTimer(
             seconds: seconds,
             // ignore: INVALID_USE_OF_PROTECTED_MEMBER
             callback: () => state.setState(() {}));
 
-  /// This State has a built-in InheritedWidget
-  final InheritedWidgetStateMixin state;
-
   final _WordPairsTimer _timer;
 
-  // Turn on the timer when necessary.
+  /// Turn on the timer when necessary.
   void activate() => _timer.activate();
 
-  // Turn off the timer if the Stat object is closed.
+  /// Turn off the timer if the Stat object is closed.
   void deactivate() => _timer.deactivate();
 
   @override
   Widget build(BuildContext context) {
+    // Find the 'latest' InheritedWidgetStateMixin object in the Widget tree
+    final _state = context.findAncestorStateOfType<InheritedWidgetStateMixin>();
     // This widget is rebuilt if the InheritedWidget is called again and again
-    state.dependOnInheritedWidget(context);
+    _state?.dependOnInheritedWidget(context);
     return Text(
       _timer.wordPair,
       style: TextStyle(
