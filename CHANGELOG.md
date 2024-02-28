@@ -1,4 +1,8 @@
 
+## 1.3.0
+February 28, 2024
+- dependOnInheritedWidget(BuildContext? context, {Object? aspect})
+
 ## 1.2.0
 February 28, 2024
 - Demonstrate the use of findAncestorStateOfType

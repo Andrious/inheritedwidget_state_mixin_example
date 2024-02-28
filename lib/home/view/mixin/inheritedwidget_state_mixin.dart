@@ -68,13 +68,13 @@ mixin InheritedWidgetStateMixin<T extends StatefulWidget> on State<T> {
   ///  Set the specified widget (through its context) as a dependent of the InheritedWidget
   ///
   ///  Return false if not configured to use the InheritedWidget
-  bool dependOnInheritedWidget(BuildContext? context) {
+  bool dependOnInheritedWidget(BuildContext? context, {Object? aspect}) {
     final depend = context != null && !_noBuildIn;
     if (depend) {
       if (_inheritedElement == null) {
         _dependencies.add(context);
       } else {
-        context.dependOnInheritedElement(_inheritedElement!);
+        context.dependOnInheritedElement(_inheritedElement!, aspect: aspect);
       }
     }
     return depend;
