@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 /// Supplies an InheritedWidget to a State class
 ///
 mixin InheritedWidgetStateMixin<T extends StatefulWidget> on State<T> {
-  ///
   /// Don't override the State's build() function.
   /// Override this function to supply the interface instead.
   Widget buildIn(BuildContext context) => const SizedBox();
@@ -22,33 +21,48 @@ mixin InheritedWidgetStateMixin<T extends StatefulWidget> on State<T> {
     _key = ValueKey<State>(this);
   }
 
+  // Supply an identifier to the InheritedWidget
+  Key? _key;
+
+  // Clear it from memory
+  @override
+  void deactivate() {
+    _child = null;
+    _inheritedElement = null;
+    _dependencies.clear();
+    super.deactivate();
+  }
+
+  @override
+  void dispose() {
+    _key = null;
+    super.dispose();
+  }
+
   /// This replaces the State class build() function
   /// Unless, of course, the developer has explicitly overridden the function
   @override
   Widget build(BuildContext context) {
     _overrideBuild = false;
-    return _StateXInheritedWidget(
+    return _InheritedWidget(
       key: _key,
       state: this,
       child: _child ??= buildIn(context),
     );
   }
 
-  // Indicate the developer has instead overridden the build() function
+  // Only build once
+  Widget? _child;
+
+  /// Indicate the developer has instead overridden the build() function
   bool get overrideBuild => _overrideBuild;
   bool _overrideBuild = true;
 
-  // Supply an identifier to the InheritedWidget
-  Key? _key;
-
-  // Widget passed to the InheritedWidget.
-  Widget? _child;
+  /// The InheritedWidget's element object assigning Widget dependencies
+  InheritedElement? _inheritedElement;
 
   // Collect any 'widgets' depending on this State's InheritedWidget.
   final Set<BuildContext> _dependencies = {};
-
-  /// The InheritedWidget's element object assigning Widget dependencies
-  InheritedElement? _inheritedElement;
 
   ///
   ///  Set the specified widget (through its context) as a dependent of the InheritedWidget
@@ -76,20 +90,11 @@ mixin InheritedWidgetStateMixin<T extends StatefulWidget> on State<T> {
     widgetFunc ??= (_) => const SizedBox();
     return _DependencyWidget(state: this, widgetFunc: widgetFunc);
   }
-
-  @override
-  void dispose() {
-    _key = null;
-    _child = null;
-    _inheritedElement = null;
-    _dependencies.clear();
-    super.dispose();
-  }
 }
 
 /// The built-in InheritedWidget
-class _StateXInheritedWidget extends InheritedWidget {
-  const _StateXInheritedWidget({
+class _InheritedWidget extends InheritedWidget {
+  const _InheritedWidget({
     super.key,
     required this.state,
     required super.child,
