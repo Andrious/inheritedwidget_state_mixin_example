@@ -29,4 +29,23 @@ class _RandomFoxState extends ImageAPIState<RandomFox> {
         ) {
     add(FoxController());
   }
+
+  /// Overridden for your benefit.
+  /// Place a breakpoint here and note when its called.
+  @override
+  // ignore: unnecessary_overrides
+  Widget build(BuildContext context) => super.build(context);
+
+  /// Overridden for your benefit.
+  /// Place a breakpoint here and note when its called.
+  /// Right after the initState() function when first created and
+  /// whenever its to rebuild due its possible dependency to an InheritedWidget
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (kDebugMode) {
+      print(
+          '>>>>>>>>>>>>>>>>>>>>>>>>>   _RandomFoxState didChangeDependencies() called.');
+    }
+  }
 }

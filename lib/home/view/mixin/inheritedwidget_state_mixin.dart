@@ -18,24 +18,40 @@ mixin InheritedWidgetStateMixin<T extends StatefulWidget> on State<T> {
   @override
   void initState() {
     super.initState();
-    _key = ValueKey<State>(this);
+    _inheritedWidgetStateMixinMap.addAll({runtimeType: this});
+    _key = ValueKey<State<T>>(this);
   }
 
   // Supply an identifier to the InheritedWidget
   Key? _key;
+  // Record all the Mixin's used in the app
+  static final Map<Type, InheritedWidgetStateMixin>
+      _inheritedWidgetStateMixinMap = {};
+
+  // Clear it from memory
+  @override
+  void activate() {
+    super.activate();
+    // Return to Map
+    _inheritedWidgetStateMixinMap.addAll({runtimeType: this});
+  }
 
   // Clear it from memory
   @override
   void deactivate() {
+    // Remove from Map.
+    _inheritedWidgetStateMixinMap.removeWhere((_, value) => value == this);
     _child = null;
-    _inheritedElement = null;
-    _dependencies.clear();
+    // _inheritedElement = null;
+    // _dependents.clear();
     super.deactivate();
   }
 
   @override
   void dispose() {
     _key = null;
+    _inheritedElement = null;
+    _dependents.clear();
     super.dispose();
   }
 
@@ -62,7 +78,7 @@ mixin InheritedWidgetStateMixin<T extends StatefulWidget> on State<T> {
   InheritedElement? _inheritedElement;
 
   // Collect any 'widgets' depending on this State's InheritedWidget.
-  final Set<BuildContext> _dependencies = {};
+  final Set<BuildContext> _dependents = {};
 
   ///
   ///  Set the specified widget (through its context) as a dependent of the InheritedWidget
@@ -72,7 +88,7 @@ mixin InheritedWidgetStateMixin<T extends StatefulWidget> on State<T> {
     final depend = context != null && !_noBuildIn;
     if (depend) {
       if (_inheritedElement == null) {
-        _dependencies.add(context);
+        _dependents.add(context);
       } else {
         context.dependOnInheritedElement(_inheritedElement!, aspect: aspect);
       }
@@ -86,9 +102,22 @@ mixin InheritedWidgetStateMixin<T extends StatefulWidget> on State<T> {
 
   /// When the State's InheritedWidget is called again,
   /// this 'widget function' will be called again.
-  Widget stateSet(WidgetBuilder? widgetFunc) {
-    widgetFunc ??= (_) => const SizedBox();
-    return _DependencyWidget(state: this, widgetFunc: widgetFunc);
+  Widget stateSet<U extends InheritedWidgetStateMixin?>(
+      WidgetBuilder? widgetFunc) {
+    // Find the specified Type U
+    var mixin = _inheritedWidgetStateMixinMap.isEmpty
+        ? null
+        : _inheritedWidgetStateMixinMap[U];
+    // If Type not explicitly specified default to this State
+    if (mixin == null && null is U) {
+      mixin = this;
+    }
+    widgetFunc ??= (_) => SizedBox(key: _key);
+    // If specified Type not found, no Inherited dependency is performed.
+    return _DependencyWidget(
+      state: mixin,
+      widgetFunc: widgetFunc,
+    );
   }
 }
 
@@ -109,9 +138,9 @@ class _InheritedWidget extends InheritedWidget {
     state._inheritedElement = element;
     // Associate any dependencies widgets to this InheritedWidget
     // toList(growable: false) prevent concurrent error
-    for (final context in state._dependencies.toList(growable: false)) {
+    for (final context in state._dependents.toList(growable: false)) {
       context.dependOnInheritedElement(element);
-      state._dependencies.remove(context);
+      state._dependents.remove(context);
     }
     return element;
   }
@@ -125,15 +154,15 @@ class _InheritedWidget extends InheritedWidget {
 /// Called by the stateSet()
 /// Supply a widget to depend upon the built-in InheritedWidget
 class _DependencyWidget extends StatelessWidget {
-  const _DependencyWidget({
-    required this.state,
+  _DependencyWidget({
+    this.state,
     required this.widgetFunc,
-  });
-  final InheritedWidgetStateMixin state;
+  }) : super(key: UniqueKey()); // Avoid collisions
+  final InheritedWidgetStateMixin? state;
   final WidgetBuilder widgetFunc;
   @override
   Widget build(BuildContext context) {
-    state.dependOnInheritedWidget(context);
+    state?.dependOnInheritedWidget(context);
     return widgetFunc(context);
   }
 }

@@ -21,6 +21,16 @@ class _InheritDogState extends State<InheritDog>
   _InheritDogState() {
     DogController(this);
   }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (kDebugMode) {
+      print(
+          '>>>>>>>>>>>>>>>>>>>>>>>>>   $this.runtimeType didChangeDependencies() called.');
+    }
+  }
+
   @override
   bool updateShouldNotify(covariant InheritedWidget oldWidget) => true;
 

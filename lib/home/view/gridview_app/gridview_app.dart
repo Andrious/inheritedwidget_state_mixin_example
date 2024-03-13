@@ -25,7 +25,7 @@ class _GridPageState extends State<GridPage> {
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
-          title: const Text('Inherited Widget Example App'),
+          title: const Text('InheritedWidget Example App'),
           shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.vertical(
               bottom: Radius.circular(30),

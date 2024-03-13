@@ -1,4 +1,10 @@
 
+## 1.4.0
+March 12, 2024
+- Introduced futurebuilder_state_mixin.dart
+- Map<Type, InheritedWidgetStateMixin> _inheritedWidgetStateMixinMap = {};
+-  Widget stateSet<U extends InheritedWidgetStateMixin?>(WidgetBuilder? widgetFunc) {
+
 ## 1.3.0
 February 28, 2024
 - dependOnInheritedWidget(BuildContext? context, {Object? aspect})

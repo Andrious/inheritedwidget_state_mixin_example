@@ -48,6 +48,9 @@ class _WordPairsTimer {
   }) {
     // Initialize the Timer
     _initTimer();
+
+    // Uncomment if you don't want the Timer working.
+    // timer?.cancel();
   }
 
   /// Number of seconds between intervals set by the timer

@@ -11,6 +11,6 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) => const MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: MyHomePage(title: 'InheritedWidget Demo'),
+        home: HomePage(),
       );
 }

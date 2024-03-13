@@ -24,6 +24,7 @@ class ImageAPIController extends Controller {
   Image? image;
 
   ///
+  // ignore: INVALID_USE_OF_PROTECTED_MEMBER
   void onTap() => state?.setState(() {});
 
   /// The number of images loading using this class.

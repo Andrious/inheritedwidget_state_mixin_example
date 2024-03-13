@@ -1,4 +1,6 @@
 //
+export 'view/first_page/first_page.dart';
+
 export 'view/gridview_app/gridview_app.dart';
 
 export 'view/images/_view_images.dart';

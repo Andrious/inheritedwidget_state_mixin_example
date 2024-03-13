@@ -15,6 +15,6 @@ class Controller {
   Future<bool> initAsync() async => true;
 
   /// Call the associated State object to rebuild
-  //ignore: invalid_use_of_private_members
-  void setState(VoidCallback fn) => state?.setState(fn);
+  // ignore: INVALID_USE_OF_PROTECTED_MEMBER
+  void setState(VoidCallback fn) => _state?.setState(fn);
 }
