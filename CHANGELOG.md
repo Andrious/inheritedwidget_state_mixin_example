@@ -1,4 +1,9 @@
 
+## 1.5.0
+March 15, 2024
+- activate() to first_page.dart
+- image_api.dart documented further
+
 ## 1.4.0
 March 12, 2024
 - Introduced futurebuilder_state_mixin.dart

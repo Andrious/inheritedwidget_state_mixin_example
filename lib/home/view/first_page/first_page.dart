@@ -27,6 +27,13 @@ class _FirstPageState extends State<FirstPage> with InheritedWidgetStateMixin {
 
   late WordPairs wordPairsWidget;
 
+  /// It may be 'moved around' the Widget tree
+  @override
+  void activate() {
+    super.activate();
+    wordPairsWidget.activate();
+  }
+
   /// Ensure to also 'deactivate' the word pairs package
   @override
   void deactivate() {
@@ -112,3 +119,6 @@ class _FirstPageState extends State<FirstPage> with InheritedWidgetStateMixin {
     );
   }
 }
+
+/// Used as an example State object for the stateSet() function
+class _UnusedState extends State<FirstPage> with InheritedWidgetStateMixin {}

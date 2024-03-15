@@ -39,19 +39,19 @@ class ImageAPIState<T extends StatefulWidget> extends State<T>
   late ImageAPIController _con;
 
   /// IMPORTANT: Usually you want only the Future routine to run once
-  /// and so you'd override the initAsync() function (like you would for initState())
+  /// and so you'd override the initAsync() function (like you would the initState() function)
   /// However, if you want the Future routine to run every time,
   /// override instead the runAsync() function.
   @override
   Future<bool> runAsync() => _con.initAsync();
 
-  /// Called after the FutureBuilder
+  /// Called after the FutureBuilder now in the build() function
   @override
   Widget buildF(BuildContext context) {
     controller?.dependOnInheritedWidget(context);
     return GestureDetector(
-      onTap: () => setState(() {}),
-      onDoubleTap: controller?.newAnimals,
+      onTap: () => setState(() {}), // Refresh just this image
+      onDoubleTap: controller?.newAnimals, // Refresh three images
       child: Card(
         child: _con.image ?? const SizedBox(),
       ),
