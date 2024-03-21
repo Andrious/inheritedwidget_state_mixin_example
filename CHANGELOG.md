@@ -1,4 +1,10 @@
 
+## 1.6.0
+March 21, 2024
+- class _MyAppState extends State<MyApp> with FutureBuilderStateMixin
+- Introduced a Splash screen, splash_screen.dart
+- Demonstrating  Future<bool> initAsync() => _con.initAsync();
+
 ## 1.5.0
 March 15, 2024
 - activate() to first_page.dart

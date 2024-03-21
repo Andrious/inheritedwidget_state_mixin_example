@@ -45,6 +45,10 @@ class ImageAPIState<T extends StatefulWidget> extends State<T>
   @override
   Future<bool> runAsync() => _con.initAsync();
 
+  /// Comment the line above to find the Future then execute only once.
+  @override
+  Future<bool> initAsync() => _con.initAsync();
+
   /// Called after the FutureBuilder now in the build() function
   @override
   Widget buildF(BuildContext context) {

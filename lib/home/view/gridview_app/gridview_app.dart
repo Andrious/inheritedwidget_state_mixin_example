@@ -18,8 +18,11 @@ class _GridPageState extends State<GridPage> {
   void initState() {
     super.initState();
     con = HomeController(this);
+    imgUrl =
+        'https://images.pexels.com/photos/865002/pexels-photo-865002.jpeg?auto=compress&cs=tinysrgb&h=350';
   }
 
+  late String imgUrl;
   late HomeController con;
 
   @override

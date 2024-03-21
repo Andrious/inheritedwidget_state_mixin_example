@@ -1,12 +1,22 @@
 import 'package:flutter/cupertino.dart'
     show
-        DefaultCupertinoLocalizations,
+        CupertinoActivityIndicator,
         CupertinoLocalizations,
-        CupertinoUserInterfaceLevel;
+        CupertinoUserInterfaceLevel,
+        DefaultCupertinoLocalizations;
 
-import 'package:flutter/foundation.dart';
+import 'package:flutter/foundation.dart'
+    show
+        ErrorDescription,
+        FlutterError,
+        FlutterErrorDetails,
+        ValueKey,
+        kDebugMode;
 
 import 'package:flutter/material.dart';
+
+import 'package:universal_platform/universal_platform.dart'
+    show UniversalPlatform;
 
 ///
 /// Supply a FutureBuilder to a State object.
@@ -56,7 +66,7 @@ mixin FutureBuilderStateMixin<T extends StatefulWidget> on State<T> {
   Future<bool>? _future;
 
   /// Run the StateX object's initAsync() function
-  /// Override this function to repeatedly run initAsync()
+  /// Override this function to repeatedly run the asynchronous operation
   Future<bool> runAsync() {
     // Once true, initAsync() function is never run again
     // unless the runAsync() function is overridden.
@@ -71,9 +81,6 @@ mixin FutureBuilderStateMixin<T extends StatefulWidget> on State<T> {
   AsyncSnapshot<bool>? get snapshot => _snapshot;
   AsyncSnapshot<bool>? _snapshot;
 
-  /// Record any splash screen
-  Widget? _splashScreen;
-
   /// Returns the appropriate widget when the Future is completed.
   Widget _futureBuilder(BuildContext context, AsyncSnapshot<bool> snapshot) {
     //
@@ -83,11 +90,7 @@ mixin FutureBuilderStateMixin<T extends StatefulWidget> on State<T> {
     FlutterErrorDetails? errorDetails;
 
     if (snapshot.connectionState == ConnectionState.done) {
-      // Release any splash screen
-      _splashScreen = null;
-
       if (snapshot.hasData) {
-        // && snapshot.data!) {
         //
         /// IMPORTANT: Must supply the State object's context: this.context
         widget = buildF(this.context);
@@ -100,7 +103,7 @@ mixin FutureBuilderStateMixin<T extends StatefulWidget> on State<T> {
           exception: exception,
           stack: exception is Error ? exception.stackTrace : null,
           library: 'state_extended.dart',
-          context: ErrorDescription('Error in FutureBuilder'),
+          context: ErrorDescription('Error in _futureBuilder'),
         );
 
         // Possibly recover resources and close services before continuing to exit in error.
@@ -121,44 +124,35 @@ mixin FutureBuilderStateMixin<T extends StatefulWidget> on State<T> {
       // Keep trying until there's an error.
       if (errorDetails == null) {
         //
-        // A splash screen may have been supplied
-        if (_splashScreen != null) {
-          widget = _splashScreen;
-        } else {
-          try {
-            // Display the splash screen
-            // IMPORTANT: Supply the State object's context: this.context
-            _splashScreen = onSplashScreen(this.context);
+        try {
+          // Display the splash screen
+          // IMPORTANT: Supply the State object's context: this.context
+          widget = onSplashScreen(this.context);
+        } catch (e) {
+          // Throw in DebugMode.
+          if (kDebugMode) {
+            rethrow;
+          } else {
+            //
+            errorDetails = FlutterErrorDetails(
+              exception: e,
+              stack: e is Error ? e.stackTrace : null,
+              library: 'state_extended.dart',
+              context: ErrorDescription('Error in Splash Screen'),
+            );
 
-            widget = _splashScreen;
-          } catch (e) {
-            // Don't run the splashScreen ever again. It's in error.
-            _splashScreen = const SizedBox();
+            // Resets the count of errors to show a complete error message not an abbreviated one.
+            FlutterError.resetErrorCount();
 
-            // Throw in DebugMode.
-            if (kDebugMode) {
-              rethrow;
-            } else {
-              //
-              errorDetails = FlutterErrorDetails(
-                exception: e,
-                stack: e is Error ? e.stackTrace : null,
-                library: 'state_extended.dart',
-                context: ErrorDescription('Error in Splash Screen'),
-              );
-
-              // Resets the count of errors to show a complete error message not an abbreviated one.
-              FlutterError.resetErrorCount();
-
-              // Log errors
-              FlutterError.presentError(errorDetails);
-            }
+            // Log errors
+            FlutterError.presentError(errorDetails);
           }
         }
 
         // Still no widget
-        //  CupertinoActivityIndicator used if TargetPlatform.iOS or TargetPlatform.macOS
-        widget ??= const Center(child: CircularProgressIndicator());
+        widget ??= UniversalPlatform.isIOS
+            ? const Center(child: CupertinoActivityIndicator())
+            : const Center(child: CircularProgressIndicator());
 
         // There was an error instead.
       } else {
@@ -167,9 +161,6 @@ mixin FutureBuilderStateMixin<T extends StatefulWidget> on State<T> {
 
         // Log the error
         FlutterError.presentError(errorDetails);
-
-        // Release any splash screen
-        _splashScreen = null;
 
         try {
           widget = ErrorWidget.builder(errorDetails);
