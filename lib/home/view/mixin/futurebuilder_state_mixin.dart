@@ -97,11 +97,9 @@ mixin FutureBuilderStateMixin<T extends StatefulWidget> on State<T> {
         //
       } else if (snapshot.hasError) {
         //
-        final exception = snapshot.error!;
-
         errorDetails = FlutterErrorDetails(
-          exception: exception,
-          stack: exception is Error ? exception.stackTrace : null,
+          exception: snapshot.error!,
+          stack: snapshot.stackTrace,
           library: 'state_extended.dart',
           context: ErrorDescription('Error in _futureBuilder'),
         );

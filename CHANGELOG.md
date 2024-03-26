@@ -1,4 +1,8 @@
 
+## 1.7.0
+March 25, 2024
+- stack: snapshot.stackTrace, passed to FlutterErrorDetails 
+
 ## 1.6.0
 March 21, 2024
 - class _MyAppState extends State<MyApp> with FutureBuilderStateMixin
