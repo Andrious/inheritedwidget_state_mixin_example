@@ -20,11 +20,17 @@ class RandomBird extends StatefulWidget {
 class _RandomBirdState extends ImageAPIState<RandomBird> {
   _RandomBirdState()
       : super(
+          // uri: Uri(
+          //   scheme: 'https',
+          //   host: 'shibe.online',
+          //   path: 'api/birds',
+          // ),
           uri: Uri(
             scheme: 'https',
-            host: 'shibe.online',
-            path: 'api/birds',
+            host: 'api.sefinek.net',
+            path: 'api/v2/random/animal/bird',
           ),
+          message: 'message',
         ) {
     add(BirdController());
   }

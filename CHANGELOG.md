@@ -1,4 +1,8 @@
 
+## 1.7.1
+July 02, 2024
+- New host, 'api.sefinek.net', for the cat and bird images 
+
 ## 1.7.0
 March 25, 2024
 - stack: snapshot.stackTrace, passed to FlutterErrorDetails 
